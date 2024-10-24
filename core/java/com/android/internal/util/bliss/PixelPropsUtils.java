@@ -31,7 +31,6 @@ import android.os.Binder;
 import android.os.Build;
 import android.os.Process;
 import android.os.SystemProperties;
-import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -203,7 +202,7 @@ public final class PixelPropsUtils {
         propsToChangePixel5a.put("FINGERPRINT", "google/barbet/barbet:14/AP2A.240805.005/12025142:user/release-keys");
     }
 
-    public static String getBuildID(String fingerprint) {
+    private static String getBuildID(String fingerprint) {
         Pattern pattern = Pattern.compile("([A-Za-z0-9]+\\.\\d+\\.\\d+\\.\\w+)");
         Matcher matcher = pattern.matcher(fingerprint);
 
@@ -213,7 +212,7 @@ public final class PixelPropsUtils {
         return "";
     }
 
-    public static String getDeviceName(String fingerprint) {
+    private static String getDeviceName(String fingerprint) {
         String[] parts = fingerprint.split("/");
         if (parts.length >= 2) {
             return parts[1];
@@ -279,7 +278,6 @@ public final class PixelPropsUtils {
                 if (deviceArrays.length > 0) {
                     int randomIndex = new Random().nextInt(deviceArrays.length);
                     int selectedArrayResId = resources.getIdentifier(deviceArrays[randomIndex], "array", packageName);
-                    String selectedArrayName = resources.getResourceEntryName(selectedArrayResId);
                     String[] selectedDeviceProps = resources.getStringArray(selectedArrayResId);
 
                     setPropValue("MANUFACTURER", selectedDeviceProps[0]);
@@ -295,8 +293,6 @@ public final class PixelPropsUtils {
                     setPropValue("TAGS", selectedDeviceProps[10].isEmpty() ? "release-keys" : selectedDeviceProps[10]);
                     setVersionFieldString("SECURITY_PATCH", selectedDeviceProps[11]);
                     setVersionFieldInt("DEVICE_INITIAL_SDK_INT", Integer.parseInt(selectedDeviceProps[12]));
-
-                    Settings.System.putString(context.getContentResolver(), Settings.System.PPU_SPOOF_BUILD_GMS_ARRAY, selectedArrayName);
                 } else {
                     Log.e(TAG, "No device arrays found.");
                 }
