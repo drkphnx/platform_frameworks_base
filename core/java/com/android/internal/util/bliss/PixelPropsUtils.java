@@ -259,7 +259,7 @@ public final class PixelPropsUtils {
     }
 
     public static void spoofBuildGms(Context context) {
-        String packageName = "com.goolag.pif";
+        String packageName = "org.evolution.pif";
 
         if (!BlissUtils.isPackageInstalled(context, packageName)) {
             Log.e(TAG, "'" + packageName + "' is not installed.");
@@ -280,19 +280,15 @@ public final class PixelPropsUtils {
                     int selectedArrayResId = resources.getIdentifier(deviceArrays[randomIndex], "array", packageName);
                     String[] selectedDeviceProps = resources.getStringArray(selectedArrayResId);
 
-                    setPropValue("MANUFACTURER", selectedDeviceProps[0]);
-                    setPropValue("MODEL", selectedDeviceProps[1]);
-                    setPropValue("FINGERPRINT", selectedDeviceProps[2]);
-                    setPropValue("BRAND", selectedDeviceProps[3]);
-                    setPropValue("PRODUCT", selectedDeviceProps[4]);
-                    setPropValue("DEVICE", selectedDeviceProps[5].isEmpty() ? getDeviceName(selectedDeviceProps[2]) : selectedDeviceProps[5]);
-                    setVersionFieldString("RELEASE", selectedDeviceProps[6]);
-                    setPropValue("ID", selectedDeviceProps[7].isEmpty() ? getBuildID(selectedDeviceProps[2]) : selectedDeviceProps[7]);
-                    setVersionFieldString("INCREMENTAL", selectedDeviceProps[8]);
-                    setPropValue("TYPE", selectedDeviceProps[9].isEmpty() ? "user" : selectedDeviceProps[9]);
-                    setPropValue("TAGS", selectedDeviceProps[10].isEmpty() ? "release-keys" : selectedDeviceProps[10]);
-                    setVersionFieldString("SECURITY_PATCH", selectedDeviceProps[11]);
-                    setVersionFieldInt("DEVICE_INITIAL_SDK_INT", Integer.parseInt(selectedDeviceProps[12]));
+                    setPropValue("BRAND", selectedDeviceProps[0]);
+                    setPropValue("MANUFACTURER", selectedDeviceProps[1]);
+                    setPropValue("ID", selectedDeviceProps[2].isEmpty() ? getBuildID(selectedDeviceProps[6]) : selectedDeviceProps[2]);
+                    setPropValue("DEVICE", selectedDeviceProps[3].isEmpty() ? getDeviceName(selectedDeviceProps[6]) : selectedDeviceProps[3]);
+                    setPropValue("PRODUCT", selectedDeviceProps[4].isEmpty() ? getDeviceName(selectedDeviceProps[6]) : selectedDeviceProps[4]);
+                    setPropValue("MODEL", selectedDeviceProps[5]);
+                    setPropValue("FINGERPRINT", selectedDeviceProps[6]);
+                    setPropValue("TYPE", selectedDeviceProps[7].isEmpty() ? "user" : selectedDeviceProps[7]);
+                    setPropValue("TAGS", selectedDeviceProps[8].isEmpty() ? "release-keys" : selectedDeviceProps[8]);
                 } else {
                     Log.e(TAG, "No device arrays found.");
                 }
@@ -422,18 +418,6 @@ public final class PixelPropsUtils {
 
     private static void setVersionFieldString(String key, String value) {
         try {
-            Field field = Build.VERSION.class.getDeclaredField(key);
-            field.setAccessible(true);
-            field.set(null, value);
-            field.setAccessible(false);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            Log.e(TAG, "Failed to spoof Build." + key, e);
-        }
-    }
-
-    private static void setVersionFieldInt(String key, int value) {
-        try {
-            dlog("Defining version field " + key + " to " + value);
             Field field = Build.VERSION.class.getDeclaredField(key);
             field.setAccessible(true);
             field.set(null, value);
