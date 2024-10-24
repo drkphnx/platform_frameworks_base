@@ -323,7 +323,7 @@ public final class PixelPropsUtils {
         }
         if (sIsGms) {
             if (shouldTryToCertifyDevice()) {
-                dlog("Spoofing build for GMS to pass CTS/Play Integrity API");
+                dlog("Spoofing build for GMS");
                 spoofBuildGms(context);
             }
         } else if ((packageName.toLowerCase().contains(PACKAGE_GOOGLE) && !sIsGms)
