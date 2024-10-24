@@ -59,8 +59,8 @@ public final class PixelPropsUtils {
     private static final String PROCESS_GMS_UNSTABLE = PACKAGE_GMS + ".unstable";
     private static final String PACKAGE_GOOGLE = "com.google";
     private static final String PACKAGE_SI = "com.google.android.settings.intelligence";
-    private static final String SPOOF_PI = "persist.sys.pihooks.enable";
-    private static final String SPOOF_PIXEL_PROPS = "persist.sys.pphooks.enable";
+    private static final String SAMSUNG = "com.samsung.";
+    private static final String SPOOF_MUSIC_APPS = "persist.sys.disguise_props_for_music_app";
 
     private static final String TAG = PixelPropsUtils.class.getSimpleName();
     private static final String DEVICE = "ro.bliss.device";
@@ -327,11 +327,8 @@ public final class PixelPropsUtils {
         }
         if (sIsGms) {
             if (shouldTryToCertifyDevice()) {
-                if (!SystemProperties.getBoolean(SPOOF_PI, true)) {
-                    return;
-                } else {
-                    spoofBuildGms(context);
-                }
+                dlog("Spoofing build for GMS to pass CTS/Play Integrity API");
+                spoofBuildGms(context);
             }
         } else if ((packageName.toLowerCase().contains(PACKAGE_GOOGLE) && !sIsGms)
                 || Arrays.asList(packagesToChangeRecentPixel).contains(packageName)
@@ -344,7 +341,7 @@ public final class PixelPropsUtils {
                 } else if (isPixelDevice) {
                     return;
                 }
-            } else if (!sEnablePixelProps || !SystemProperties.getBoolean(SPOOF_PIXEL_PROPS, true)) {
+            } else if (!sEnablePixelProps) {
                 return;
             } else if (Arrays.asList(packagesToChangeRecentPixel).contains(packageName)) {
                 if (packageName.toLowerCase().contains("com.google.android.gms")) {
